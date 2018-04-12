@@ -7,7 +7,7 @@ Complete C# library project for creating SDK.
 1. Open the projet in C# IDE like Monodevelop or Visual Code.
 2. Locate MyClass.cs
 3. Build the project.
-4. Locate triforce\_SDK.dll in ./triforce\_SDK/bin/Debug/ . 
+4. Locate raidParty\_SDK.dll in ./raidParty\_SDK/bin/Debug/ . 
 
 ### Prerequisites
 
@@ -17,40 +17,42 @@ C# Development Envrionment
 
 1. Unity: Select Import new asset.
 
-2. Locate triforce_SDK.dll and import. 
+2. Locate raidParty_SDK.dll and import. 
 
 3. Now in internal C# scripts in Unity:
 
  ```
- Using triforce_SDK;
+ Using raidParty_SDK;
  ```
-4. Create the TriforceLib class Instance and pass the required params.
+4. Create the raidPartyLib class Instance and pass the required params.
  
  ```
- TriforceLib instance = new TriforceLib("<Player 
- Email Address>", "<Game Public Key>", "<Game 
- Private Key>")
+ raidPartyLib instance = new raidPartyLib("<Game Public Key>", "<Game Private Key>")
  ```
 
-__TriforceLib instance is now ready to use.__
+__raidPartyLib instance is now ready to use.__
 
 ### Track Player
 
-Players can be tracked using 'trackPlayer' method of TriforceLib.
+Players' login activity can be tracked using 'trackPlayer' method of raidPartyLib. Pass in the player id recieved from players to sync with the backend. 
+
+* playerId
 
 ```
-instance.trackPlayer();
+instance.trackPlayer(<"playerId">);
 ```
 
 ### Reward Player Event
 
-Event for rewarding player can be generated using 'rewardPlayerEvent' method of TriforceLib.
+Events can be generated using 'rewardPlayerEvent' method of raidPartyLib.
 This method requires two arguments:
+
+ * event name
 
  * event description
 
- * event value (reward value in terms of how many force tokens)
+ * event value (reward value in terms of how many force tokens) (Optional)
 
 ```
-instance.rewardPlayerEvent("<event description>", "<event Value>");
+instance.rewardPlayerEvent("<event name>", "<event description>", "<event Value>");
 ```

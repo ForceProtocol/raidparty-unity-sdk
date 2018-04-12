@@ -4,18 +4,17 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Net;
 using System.Collections.Specialized;
+using UnityEngine;
 
-
-namespace triforce_SDK
+namespace raidParty_SDK
 {
-	public class TriforceLib
+	public class RaidPartyLib
 	{
 		const String RAIDPARTY_API_HOST = "http://localhost:1337/";
-		private String playerEmail, developerPublicKey, developerPrivateKey;
+		private String developerPublicKey, developerPrivateKey;
 
-		public TriforceLib (String email, String public_key, String private_key)
+		public RaidPartyLib (String public_key, String private_key)
 		{
-			this.playerEmail = email;
 			this.developerPublicKey = public_key;
 			this.developerPrivateKey = private_key;
 		}
@@ -39,26 +38,36 @@ namespace triforce_SDK
 			return sh1Hash;
 		}
 	
-		public String trackPlayer() {
-			String stringToEncrypt = "/sdk/player/track" + ":" + this.playerEmail + ":" + this.developerPublicKey + ":" 
+		public String trackPlayer(String playerId) {
+			if (playerId == "") {
+				return "Invalid playerId";
+			}
+			PlayerPrefs.SetString ("playerId", playerId);
+			String stringToEncrypt = "/sdk/player/track" + ":" + playerId + ":" + this.developerPublicKey + ":" 
 				+ this.developerPrivateKey;
 			String authKey = generateAuthKey(stringToEncrypt);
 			var requestParams = new NameValueCollection();
 			requestParams["public_key"] = this.developerPublicKey;
 			requestParams["auth_key"] = authKey;
-			requestParams["user_id"] = this.playerEmail;
-			return this.makeApiRequest("sdk/player/track", requestParams);
+			requestParams["user_id"] = playerId;
+			String res = this.makeApiRequest("sdk/player/track", requestParams);
 		}
 	
-		public String rewardPlayerEvent(String eventDescription, String eventValue) {
-			String eventName = "rewardEvent";
-			String stringToEncrypt = "/sdk/game/event" + ":" + this.playerEmail + ":" + eventName + ":" + this.developerPublicKey + ":" 
+		public String trackEvent(String eventName, String eventDescription, String eventValue) {
+			String playerId = PlayerPrefs.GetString ("playerId");
+			if (playerId == "") {
+				return "playerId not found";
+			}
+			if (eventName.Length == 0 || eventDescription.Length == 0 || eventDescription.Length > 140) {
+				return "Missing/Invalid eventName and/or eventDescription";
+			}
+			String stringToEncrypt = "/sdk/game/event" + ":" + playerId + ":" + eventName + ":" + this.developerPublicKey + ":" 
 				+ this.developerPrivateKey;
 			String authKey = generateAuthKey(stringToEncrypt);
 			var requestParams = new NameValueCollection();
 			requestParams["public_key"] = this.developerPublicKey;
 			requestParams["auth_key"] = authKey;
-			requestParams["user_id"] = this.playerEmail;
+			requestParams["user_id"] = playerId;
 			requestParams["event_name"] = eventName;
 			requestParams ["event_description"] = eventDescription;
 			requestParams ["event_value"] = eventValue;
