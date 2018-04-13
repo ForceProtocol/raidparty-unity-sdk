@@ -79,7 +79,7 @@ Players' login activity can be tracked using 'trackPlayer' method of raidPartyLi
 
 ```
 
-instance.trackPlayer(<"raidPartyUid">);
+raidParty.trackPlayer(<"raidPartyUid">);
 
 ```
 
@@ -109,6 +109,6 @@ This method requires two arguments:
 
 ```
 
-instance.rewardPlayerEvent("<event name>", "<event description>", "<event Value>");
+raidParty.trackEvent("<event name>", "<event description>", "<event Value>");
 
 ```
