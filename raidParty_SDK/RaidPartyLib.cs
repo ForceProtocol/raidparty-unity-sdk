@@ -10,7 +10,7 @@ namespace raidParty_SDK
 {
 	public class RaidPartyLib
 	{
-		const String RAIDPARTY_API_HOST = "https://hub.raidparty.io";
+		const String RAIDPARTY_API_HOST = "https://staging.hub.raidparty.io";
 		private String app_id, app_key;
 
 		public RaidPartyLib (String app_id, String app_key)
