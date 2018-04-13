@@ -11,20 +11,33 @@ namespace raidParty_SDK
 	public class RaidPartyLib
 	{
 		const String RAIDPARTY_API_HOST = "http://localhost:1337/";
-		private String developerPublicKey, developerPrivateKey;
+		private String app_id, app_key;
 
-		public RaidPartyLib (String public_key, String private_key)
+		public RaidPartyLib (String app_id, String app_key)
 		{
-			this.developerPublicKey = public_key;
-			this.developerPrivateKey = private_key;
+			this.app_id = app_id;
+			this.app_key = app_key;
 		}
 
 		private String makeApiRequest(String apiRoute, NameValueCollection requestParams) {
-			using (WebClient client = new WebClient())
-			{
-				var response = client.UploadValues(RAIDPARTY_API_HOST + apiRoute, requestParams);
-				String responseString = Encoding.Default.GetString(response);
-				return responseString;
+			try{
+				using (WebClient client = new WebClient())
+				{
+					var response = client.UploadValues(RAIDPARTY_API_HOST + apiRoute, requestParams);
+					String responseString = Encoding.Default.GetString(response);
+					return responseString;
+				}
+			} catch (WebException ex) {
+				if (ex.Status == WebExceptionStatus.ProtocolError) {
+					var response = ex.Response as HttpWebResponse;
+					if (response != null) {	
+						return ((int)response.StatusCode).ToString ();
+					} else {
+						return "404";
+					}
+				} else {
+					return "404";
+				}
 			}
 		}
 
@@ -38,36 +51,40 @@ namespace raidParty_SDK
 			return sh1Hash;
 		}
 	
-		public String trackPlayer(String playerId) {
-			if (playerId == "") {
-				return "Invalid playerId";
+		public String trackPlayer(String raidPartyUid) {
+			if (raidPartyUid == "") {
+				return "Invalid raidPartyUid";
 			}
-			PlayerPrefs.SetString ("playerId", playerId);
-			String stringToEncrypt = "/sdk/player/track" + ":" + playerId + ":" + this.developerPublicKey + ":" 
-				+ this.developerPrivateKey;
+			String stringToEncrypt = "/sdk/player/track" + ":" + raidPartyUid + ":" + this.app_id + ":" 
+				+ this.app_key;
 			String authKey = generateAuthKey(stringToEncrypt);
 			var requestParams = new NameValueCollection();
-			requestParams["public_key"] = this.developerPublicKey;
+			requestParams["public_key"] = this.app_id;
 			requestParams["auth_key"] = authKey;
-			requestParams["user_id"] = playerId;
-			String res = this.makeApiRequest("sdk/player/track", requestParams);
+			requestParams["user_id"] = raidPartyUid;
+			String responseCode = this.makeApiRequest("sdk/player/track", requestParams);
+			if (responseCode == "201") 
+			{
+				PlayerPrefs.SetString ("raidPartyUid", raidPartyUid);
+			}
+			return responseCode;
 		}
 	
 		public String trackEvent(String eventName, String eventDescription, String eventValue) {
-			String playerId = PlayerPrefs.GetString ("playerId");
-			if (playerId == "") {
-				return "playerId not found";
+			String raidPartyUid = PlayerPrefs.GetString ("raidPartyUid");
+			if (raidPartyUid == "") {
+				return "raidPartyUid not found";
 			}
 			if (eventName.Length == 0 || eventDescription.Length == 0 || eventDescription.Length > 140) {
 				return "Missing/Invalid eventName and/or eventDescription";
 			}
-			String stringToEncrypt = "/sdk/game/event" + ":" + playerId + ":" + eventName + ":" + this.developerPublicKey + ":" 
-				+ this.developerPrivateKey;
+			String stringToEncrypt = "/sdk/game/event" + ":" + raidPartyUid + ":" + eventName + ":" + this.app_id + ":" 
+				+ this.app_key;
 			String authKey = generateAuthKey(stringToEncrypt);
 			var requestParams = new NameValueCollection();
-			requestParams["public_key"] = this.developerPublicKey;
+			requestParams["public_key"] = this.app_id;
 			requestParams["auth_key"] = authKey;
-			requestParams["user_id"] = playerId;
+			requestParams["user_id"] = raidPartyUid;
 			requestParams["event_name"] = eventName;
 			requestParams ["event_description"] = eventDescription;
 			requestParams ["event_value"] = eventValue;
