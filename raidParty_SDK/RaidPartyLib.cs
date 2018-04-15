@@ -94,6 +94,18 @@ namespace raidParty_SDK
 			requestParams ["event_value"] = eventValue;
 			return this.makeApiRequest("sdk/game/event", requestParams);
 		}
+		
+		/**
+		* Method to get the stored player ID for use in the game code
+		*/
+		public String getPlayerId(){
+			String raidPartyUid = PlayerPrefs.GetString ("raidPartyUid");
+			if (raidPartyUid == "") {
+				return false;
+			}
+			
+			return raidPartyUid;
+		}
 	}
 }
 
