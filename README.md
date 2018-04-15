@@ -55,7 +55,7 @@ Using raidParty_SDK;
 
 ```
 
-raidPartyLib raidParty = new raidPartyLib("<Game Public Key/App ID>", "<Game Private Key/App Key>")
+raidPartyLib raidParty = new raidPartyLib("<Game Public Key/App ID>", "<Game Private Key/App Key>", "<Bool testing?>")
 
 ```
 
@@ -95,12 +95,7 @@ This method requires two arguments:
 
   
 
-* event name
-
-  
-
-* event description
-
+* event ID
   
 
 * event value (reward value in terms of how many force tokens) (Optional)
@@ -109,6 +104,6 @@ This method requires two arguments:
 
 ```
 
-raidParty.trackEvent("<event name>", "<event description>", "<event Value>");
+raidParty.trackEvent("<event ID>", "<event Value>");
 
 ```

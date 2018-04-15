@@ -10,20 +10,25 @@ namespace raidParty_SDK
 {
 	public class RaidPartyLib
 	{
-		const String RAIDPARTY_API_HOST = "https://staging.hub.raidparty.io";
-		private String app_id, app_key;
+		private String app_id, app_key, raidparty_api_host;
 
-		public RaidPartyLib (String app_id, String app_key)
+		public RaidPartyLib (String app_id, String app_key, Bool testing)
 		{
 			this.app_id = app_id;
 			this.app_key = app_key;
+			
+			if(testing){
+				this.raidparty_api_host = "https://staging.hub.raidparty.io";
+			}else{
+				this.raidparty_api_host = "https://hub.raidparty.io";
+			}
 		}
 
 		private String makeApiRequest(String apiRoute, NameValueCollection requestParams) {
 			try{
 				using (WebClient client = new WebClient())
 				{
-					var response = client.UploadValues(RAIDPARTY_API_HOST + apiRoute, requestParams);
+					var response = client.UploadValues(raidparty_api_host + apiRoute, requestParams);
 					String responseString = Encoding.Default.GetString(response);
 					return responseString;
 				}
@@ -70,23 +75,22 @@ namespace raidParty_SDK
 			return responseCode;
 		}
 	
-		public String trackEvent(String eventName, String eventDescription, String eventValue) {
+		public String trackEvent(String eventId, String eventValue) {
 			String raidPartyUid = PlayerPrefs.GetString ("raidPartyUid");
 			if (raidPartyUid == "") {
 				return "raidPartyUid not found";
 			}
-			if (eventName.Length == 0 || eventDescription.Length == 0 || eventDescription.Length > 140) {
-				return "Missing/Invalid eventName and/or eventDescription";
+			if (eventId.Length == 0) {
+				return "Missing/Invalid eventId";
 			}
-			String stringToEncrypt = "/sdk/game/event" + ":" + raidPartyUid + ":" + eventName + ":" + this.app_id + ":" 
+			String stringToEncrypt = "/sdk/game/event" + ":" + raidPartyUid + ":" + eventId + ":" + this.app_id + ":" 
 				+ this.app_key;
 			String authKey = generateAuthKey(stringToEncrypt);
 			var requestParams = new NameValueCollection();
 			requestParams["public_key"] = this.app_id;
 			requestParams["auth_key"] = authKey;
 			requestParams["user_id"] = raidPartyUid;
-			requestParams["event_name"] = eventName;
-			requestParams ["event_description"] = eventDescription;
+			requestParams["event_id"] = eventId;
 			requestParams ["event_value"] = eventValue;
 			return this.makeApiRequest("sdk/game/event", requestParams);
 		}
