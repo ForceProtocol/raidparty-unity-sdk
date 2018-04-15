@@ -33,7 +33,7 @@ C# Development Envrionment
 
   
 
-1. Unity: Select  `Import new asset`.
+1. Unity: Select 'Assets' -> `Import new asset`.
 
   
 
@@ -44,10 +44,9 @@ C# Development Envrionment
 3. Now in internal C# scripts in Unity:
 
   
-
 ```
 
-Using raidParty_SDK;
+using raidParty_SDK;
 
 ```
 
@@ -55,7 +54,7 @@ Using raidParty_SDK;
 
 ```
 
-raidPartyLib raidParty = new raidPartyLib("<Game Public Key/App ID>", "<Game Private Key/App Key>", "<Bool testing?>")
+raidPartyLib raidParty = new raidPartyLib("<Game App ID>", "<Game App KEY>", "<bool testing?>")
 
 ```
 

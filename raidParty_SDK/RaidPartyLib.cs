@@ -101,7 +101,7 @@ namespace raidParty_SDK
 		public String getPlayerId(){
 			String raidPartyUid = PlayerPrefs.GetString ("raidPartyUid");
 			if (raidPartyUid == "") {
-				return false;
+				return "";
 			}
 			
 			return raidPartyUid;

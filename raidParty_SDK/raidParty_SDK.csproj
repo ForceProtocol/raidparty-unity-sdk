@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F4FDD709-9666-4BC0-9C2F-C3519E04707C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>triforce_SDK</RootNamespace>
-    <AssemblyName>triforce_SDK</AssemblyName>
+    <RootNamespace>raidParty_SDK</RootNamespace>
+    <AssemblyName>raidParty_SDK</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

@@ -1,0 +1,5 @@
+C:\wamp2\www\RaidParty\UnitySDK\raidParty_SDK\obj\Debug\raidParty_SDK.csprojResolveAssemblyReference.cache
+C:\wamp2\www\RaidParty\UnitySDK\raidParty_SDK\bin\Debug\raidParty_SDK.dll
+C:\wamp2\www\RaidParty\UnitySDK\raidParty_SDK\bin\Debug\raidParty_SDK.pdb
+C:\wamp2\www\RaidParty\UnitySDK\raidParty_SDK\obj\Debug\raidParty_SDK.dll
+C:\wamp2\www\RaidParty\UnitySDK\raidParty_SDK\obj\Debug\raidParty_SDK.pdb
