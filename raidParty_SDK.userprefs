@@ -1,10 +1,6 @@
-﻿<Properties>
+﻿<Properties StartupItem="triforce_SDK\raidParty_SDK.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="triforce_SDK/RaidPartyLib.cs">
-    <Files>
-      <File FileName="triforce_SDK/RaidPartyLib.cs" Line="53" Column="35" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

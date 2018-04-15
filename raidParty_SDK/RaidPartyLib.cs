@@ -12,7 +12,7 @@ namespace raidParty_SDK
 	{
 		private String app_id, app_key, raidparty_api_host;
 
-		public RaidPartyLib (String app_id, String app_key, Bool testing)
+		public RaidPartyLib (String app_id, String app_key, bool testing)
 		{
 			this.app_id = app_id;
 			this.app_key = app_key;

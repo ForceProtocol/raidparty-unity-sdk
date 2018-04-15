@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "raidParty_SDK", "triforce_SDK\raidParty_SDK.csproj", "{F4FDD709-9666-4BC0-9C2F-C3519E04707C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "raidParty_SDK", "raidParty_SDK\raidParty_SDK.csproj", "{F4FDD709-9666-4BC0-9C2F-C3519E04707C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
