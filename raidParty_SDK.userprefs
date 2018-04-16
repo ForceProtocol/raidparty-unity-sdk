@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="raidParty_SDK\RaidPartyLib.cs">
     <Files>
-      <File FileName="raidParty_SDK\RaidPartyLib.cs" Line="105" Column="3" />
+      <File FileName="raidParty_SDK\RaidPartyLib.cs" Line="29" Column="86" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

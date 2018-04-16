@@ -26,10 +26,10 @@ namespace raidParty_SDK
 		}
 
 		private String makeApiRequest(String apiRoute, NameValueCollection requestParams) {
-			
-			Debug.Log ("RaidParty SDK makeApiRequest route is: " + raidparty_api_host + apiRoute );
-
 			try{
+			
+				System.Net.ServicePointManager.ServerCertificateValidationCallback += (send, certificate, chain, sslPolicyErrors) => { return true; };
+			
 				using (WebClient client = new WebClient())
 				{
 					var response = client.UploadValues(raidparty_api_host + apiRoute, requestParams);
