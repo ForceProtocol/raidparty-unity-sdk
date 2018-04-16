@@ -18,29 +18,40 @@ namespace raidParty_SDK
 			this.app_key = app_key;
 			
 			if(testing){
-				this.raidparty_api_host = "https://staging.hub.raidparty.io";
+				Debug.Log ("RaidParty SDK running in test mode. Requests are sent to https://staging.hub.raidparty.io");
+				this.raidparty_api_host = "https://staging.hub.raidparty.io/";
 			}else{
-				this.raidparty_api_host = "https://hub.raidparty.io";
+				this.raidparty_api_host = "https://hub.raidparty.io/";
 			}
 		}
 
 		private String makeApiRequest(String apiRoute, NameValueCollection requestParams) {
+			
+			Debug.Log ("RaidParty SDK makeApiRequest route is: " + raidparty_api_host + apiRoute );
+
 			try{
 				using (WebClient client = new WebClient())
 				{
 					var response = client.UploadValues(raidparty_api_host + apiRoute, requestParams);
 					String responseString = Encoding.Default.GetString(response);
+
+					Debug.Log ("RaidParty SDK web client success request. Response is: " + responseString);
+
 					return responseString;
 				}
 			} catch (WebException ex) {
+
+				var response = ex.Response as HttpWebResponse;
+
 				if (ex.Status == WebExceptionStatus.ProtocolError) {
-					var response = ex.Response as HttpWebResponse;
 					if (response != null) {	
 						return ((int)response.StatusCode).ToString ();
 					} else {
+						Debug.Log ("Protocol Error and response is null");
 						return "404";
 					}
 				} else {
+					Debug.Log ("Response is null");
 					return "404";
 				}
 			}
@@ -58,6 +69,7 @@ namespace raidParty_SDK
 	
 		public String trackPlayer(String raidPartyUid) {
 			if (raidPartyUid == "") {
+				Debug.Log ("RaidParty SDK trackPlayer error. No player UID was provided.");
 				return "Invalid raidPartyUid";
 			}
 			String stringToEncrypt = "/sdk/player/track" + ":" + raidPartyUid + ":" + this.app_id + ":" 
@@ -78,9 +90,11 @@ namespace raidParty_SDK
 		public String trackEvent(String eventId, String eventValue) {
 			String raidPartyUid = PlayerPrefs.GetString ("raidPartyUid");
 			if (raidPartyUid == "") {
+				Debug.Log ("RaidParty SDK trackEvent error. No player UID was provided.");
 				return "raidPartyUid not found";
 			}
 			if (eventId.Length == 0) {
+				Debug.Log ("RaidParty SDK trackEvent error. No event ID was provided.");
 				return "Missing/Invalid eventId";
 			}
 			String stringToEncrypt = "/sdk/game/event" + ":" + raidPartyUid + ":" + eventId + ":" + this.app_id + ":" 
