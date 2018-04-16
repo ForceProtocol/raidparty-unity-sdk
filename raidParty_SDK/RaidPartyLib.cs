@@ -43,6 +43,8 @@ namespace raidParty_SDK
 
 				var response = ex.Response as HttpWebResponse;
 
+				Debug.Log ("WebExeption Response is: " + response);
+
 				if (ex.Status == WebExceptionStatus.ProtocolError) {
 					if (response != null) {	
 						return ((int)response.StatusCode).ToString ();
