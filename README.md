@@ -51,6 +51,7 @@ using raidParty_SDK;
 ```
 
 4. Create the raidPartyLib class Instance and pass the required params.
+_Note : If testing flag is set to `true`, test env will be used for serving requests._
 
 ```
 
@@ -106,3 +107,10 @@ This method requires two arguments:
 raidParty.trackEvent("<event ID>", "<event Value>");
 
 ```
+
+### Method Responses
+`trackPlayer` and `trackEvent` methods returns `Integer` responses. Response codes are as follows: 
+
+`201`: Successful Operation
+`403`: _App Id / App Key / raidPartyUid_ is not valid. Either player is not registered on raidparty or has entered invalid _PlayerId / raidPartyUid._
+`404`: Any other errors.

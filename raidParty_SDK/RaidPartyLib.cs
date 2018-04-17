@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.Collections.Specialized;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace raidParty_SDK
 {
@@ -18,32 +19,18 @@ namespace raidParty_SDK
 			this.app_key = app_key;
 			
 			if(testing){
-				this.raidparty_api_host = "https://staging.hub.raidparty.io";
+				this.raidparty_api_host = "https://staging.hub.raidparty.io/";
 			}else{
-				this.raidparty_api_host = "https://hub.raidparty.io";
+				this.raidparty_api_host = "https://hub.raidparty.io/";
 			}
 		}
 
-		private String makeApiRequest(String apiRoute, NameValueCollection requestParams) {
-			try{
-				using (WebClient client = new WebClient())
-				{
-					var response = client.UploadValues(raidparty_api_host + apiRoute, requestParams);
-					String responseString = Encoding.Default.GetString(response);
-					return responseString;
-				}
-			} catch (WebException ex) {
-				if (ex.Status == WebExceptionStatus.ProtocolError) {
-					var response = ex.Response as HttpWebResponse;
-					if (response != null) {	
-						return ((int)response.StatusCode).ToString ();
-					} else {
-						return "404";
-					}
-				} else {
-					return "404";
-				}
-			}
+		private WWW makeApiRequest(String apiRoute, WWWForm data) {
+			WWW www = new WWW(this.raidparty_api_host + apiRoute, data);
+			WaitForSeconds w;
+			while (!www.isDone)
+				w = new WaitForSeconds (0.1f);
+			return www;
 		}
 
 		private String generateAuthKey(String stringToEncrypt) {
@@ -55,44 +42,85 @@ namespace raidParty_SDK
 			}
 			return sh1Hash;
 		}
-	
-		public String trackPlayer(String raidPartyUid) {
-			if (raidPartyUid == "") {
-				return "Invalid raidPartyUid";
+
+		private int getResponseCode(WWW response) {
+			int ret = 0;
+			if (response.responseHeaders == null) {
+				Debug.LogError("no response headers.");
+				return 404;
 			}
+			else {
+				if (!response.responseHeaders.ContainsKey("STATUS")) {
+					Debug.LogError("response headers has no STATUS.");
+					return 404; 
+				}
+				else {
+					String statusLine = response.responseHeaders ["STATUS"];
+					string[] components = statusLine.Split(' ');
+					if (components.Length < 3) {
+						Debug.LogError("invalid response status: " + statusLine);
+						return 404;
+					}
+					else {
+						if (!int.TryParse(components[1], out ret)) {
+							Debug.LogError("invalid response code: " + components[1]);
+							return 404;
+						}
+					}
+				}
+			}
+			return ret;
+		}
+
+		/**
+		* Method to track player login activity through SDK.
+		*/
+		public int trackPlayer(String raidPartyUid) {
 			String stringToEncrypt = "/sdk/player/track" + ":" + raidPartyUid + ":" + this.app_id + ":" 
 				+ this.app_key;
 			String authKey = generateAuthKey(stringToEncrypt);
-			var requestParams = new NameValueCollection();
-			requestParams["public_key"] = this.app_id;
-			requestParams["auth_key"] = authKey;
-			requestParams["user_id"] = raidPartyUid;
-			String responseCode = this.makeApiRequest("sdk/player/track", requestParams);
-			if (responseCode == "201") 
-			{
+			WWWForm form = new WWWForm ();
+			form.AddField("public_key", this.app_id);
+			form.AddField("auth_key", authKey);
+			form.AddField("user_id", raidPartyUid);
+			WWW response = this.makeApiRequest("sdk/player/track", form);
+			if (response.error == null) {
 				PlayerPrefs.SetString ("raidPartyUid", raidPartyUid);
+				return 201;
+			} else {
+				return getResponseCode (response);
 			}
-			return responseCode;
 		}
 	
-		public String trackEvent(String eventId, String eventValue) {
+		/**
+		* Method to generate events through SDK.
+		*/
+		public int trackEvent(String eventId, String eventValue) {
 			String raidPartyUid = PlayerPrefs.GetString ("raidPartyUid");
 			if (raidPartyUid == "") {
-				return "raidPartyUid not found";
+				Debug.LogError("raidPartyUid not found");
+				return 405;
 			}
 			if (eventId.Length == 0) {
-				return "Missing/Invalid eventId";
+				Debug.LogError("Missing/Invalid eventId");
+				return 406;
 			}
 			String stringToEncrypt = "/sdk/game/event" + ":" + raidPartyUid + ":" + eventId + ":" + this.app_id + ":" 
 				+ this.app_key;
 			String authKey = generateAuthKey(stringToEncrypt);
-			var requestParams = new NameValueCollection();
-			requestParams["public_key"] = this.app_id;
-			requestParams["auth_key"] = authKey;
-			requestParams["user_id"] = raidPartyUid;
-			requestParams["event_id"] = eventId;
-			requestParams ["event_value"] = eventValue;
-			return this.makeApiRequest("sdk/game/event", requestParams);
+			WWWForm form = new WWWForm ();
+			form.AddField("public_key", this.app_id);
+			form.AddField("auth_key", authKey);
+			form.AddField("user_id", raidPartyUid);
+			form.AddField("event_id", eventId);
+			form.AddField("event_value", eventValue);
+			WWW response = this.makeApiRequest("sdk/game/event", form);
+			if (response.error == null) {
+				PlayerPrefs.SetString ("raidPartyUid", raidPartyUid);
+				return 201;
+			} else {
+				return getResponseCode (response);
+			}
 		}
 		
 		/**
@@ -103,7 +131,6 @@ namespace raidParty_SDK
 			if (raidPartyUid == "") {
 				return "";
 			}
-			
 			return raidPartyUid;
 		}
 	}
