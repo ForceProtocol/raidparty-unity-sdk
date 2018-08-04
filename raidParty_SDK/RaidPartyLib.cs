@@ -133,6 +133,15 @@ namespace raidParty_SDK
 			}
 			return raidPartyUid;
 		}
+
+
+
+		/**
+		* Make socket connection to request dynamic adverts
+		*/
+		public String findAdvertForAsset(String gameAssetId){
+			
+		}
 	}
 }
 
